@@ -1,22 +1,20 @@
-# 1. Usamos uma imagem leve do Node.js
-FROM node:20-slim
+FROM node:22-slim
 
-# 2. Criamos a pasta da aplicação dentro do contentor
+# ESTA LINHA É O SEGREDO: Instala as bibliotecas de segurança
+RUN apt-get update -y && apt-get install -y openssl libssl-dev ca-certificates
+
 WORKDIR /usr/src/app
 
-# 3. Copiamos os ficheiros de dependências
 COPY package*.json ./
+COPY prisma ./prisma/
 
-# 4. Instalamos as dependências
 RUN npm install
 
-# 5. Copiamos o resto do código
 COPY . .
 
-# 6. Geramos o cliente do Prisma (importante!)
+# Gera o cliente já com as bibliotecas instaladas
+RUN npx prisma generate
 
-# 7. Expomos a porta que o Fastify está a usar
 EXPOSE 3333
 
-# 8. Comando para iniciar a aplicação
 CMD [ "npm", "run", "dev" ]
