@@ -1,32 +1,13 @@
 {
   "compilerOptions": {
-    /* File Layout */
-    "rootDir": "./src",
-    "outDir": "./dist",
-
-    /* Environment Settings */
-    "target": "esnext",
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
-    "lib": ["esnext"],
-    "types": ["node"],
-
-    /* Other Outputs */
-    "sourceMap": true,
-    "declaration": true,
-    "declarationMap": true,
-
-    /* Stricter Typechecking Options */
+    "target": "ESNext",
+    "module": "ESNext", // Permite usar import/export modernos
+    "moduleResolution": "bundler", // O segredo! Resolve caminhos sem precisar de .js
+    "allowImportingTsExtensions": true, // Se precisares de importar .ts explicitamente
+    "noEmit": true, // Como usamos o TSX, não precisamos que o TS gere arquivos .js
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
-
-    /* Recommended Options */
-    "skipLibCheck": true,
-    "isolatedModules": true,
-    "moduleDetection": "force",
-    "verbatimModuleSyntax": true
-  },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+    "skipLibCheck": true
+  }
 }
