@@ -33,3 +33,7 @@ jobs:
 
             - name: Run tests
               run: npm test
+              env:
+                  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+                  DIRECT_URL: ${{ secrets.DIRECT_URL }}
+                  JWT_SECRET: ${{ secrets.JWT_SECRET }} # Não esqueças deste!

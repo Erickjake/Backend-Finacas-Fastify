@@ -10,9 +10,14 @@ export const app = fastify({
   },
 });
 
+const jwtSecret = process.env.JWT_SECRET;
 // 1. Registamos o JWT
+if (!jwtSecret) {
+  throw new Error('A variável de ambiente JWT_SECRET não foi definida!');
+}
+
 app.register(fastifyJwt, {
-  secret: 'meu-segredo-super-seguro-financas-123',
+  secret: jwtSecret,
 });
 
 // 2. Registamos as tuas Rotas
