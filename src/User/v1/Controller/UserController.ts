@@ -9,17 +9,20 @@ export class UserController {
   async registerUser(req: FastifyRequest, reply: FastifyReply) {
     // 1. Zod Valida. Se falhar, atira erro e vai direto para o app.ts
     const data = registerUserSchema.parse(req.body);
-
     const userService = new UserService();
 
-    // 2. Só tenta registar se o Zod aprovar.
-    // Não precisamos de try/catch aqui! Se o UserService der erro
-    // (ex: email duplicado), o throw cai no Global Error Handler.
-    await userService.registerUser(data);
-
-    return reply
-      .status(201)
-      .send({ message: 'Usuário registrado com sucesso.' });
+    try {
+      const user = await userService.registerUser(data);
+      return reply.status(201).send(user);
+    } catch (error: unknown) {
+      if (
+        error instanceof Error &&
+        error.message === 'Usuário já existe com esse e-mail.'
+      ) {
+        return reply.status(409).send({ message: error.message });
+      }
+      return reply.status(500).send({ message: 'Erro interno' });
+    }
   }
 
   async loginUser(req: FastifyRequest, reply: FastifyReply) {
