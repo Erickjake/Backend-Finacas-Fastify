@@ -6,14 +6,21 @@ import { authenticate } from '../../../hook/auth.js';
 export async function userV1Routes(app: FastifyInstance) {
   const userController = new UserController();
 
-  app.addHook('onRequest', authenticate);
-  // Registo: POST /v1/users
-  app.post('/', async (request, reply) => {
-    return userController.registerUser(request, reply);
-  });
+  // 1. ROTAS PÚBLICAS (Sem Token)
+  app.post('/', async (request, reply) =>
+    userController.registerUser(request, reply),
+  );
+  app.post('/login', async (request, reply) =>
+    userController.loginUser(request, reply),
+  );
 
-  // Login: POST /v1/users/login
-  app.post('/login', async (request, reply) => {
-    return userController.loginUser(request, reply);
+  // 2. ROTAS PRIVADAS (Com Token)
+  app.register(async privateRoutes => {
+    privateRoutes.addHook('onRequest', authenticate);
+
+    privateRoutes.get('/me', async request => {
+      // Exemplo de rota protegida dentro do módulo de user
+      return { user: request.user };
+    });
   });
 }

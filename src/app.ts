@@ -4,7 +4,11 @@ import { ZodError } from 'zod';
 import { userV1Routes } from './routes/user/v1/user.route.js';
 
 // Criamos a app com a correção da barra final (trailing slash) que vimos antes!
-export const app = fastify({ ignoreTrailingSlash: true });
+export const app = fastify({
+  routerOptions: {
+    ignoreTrailingSlash: true,
+  },
+});
 
 // 1. Registamos o JWT
 app.register(fastifyJwt, {
