@@ -1,0 +1,43 @@
+name: CI (Lint, Build, Test)
+
+# 1. Quando é que este workflow deve correr?
+on:
+    push:
+        branches: [main, master]
+    pull_request:
+        branches: [main, master]
+
+jobs:
+    build-and-test:
+        runs-on: ubuntu-latest
+
+        steps:
+            # 2. Faz o "download" do teu código para a máquina do GitHub
+            - uses: actions/checkout@v4
+
+            # 3. Instala o Node.js
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+                  cache: "npm"
+
+            # 4. Instala as dependências
+            - name: Install dependencies
+              run: npm install
+
+            # 5. Corre o Lint (Verifica o estilo de código)
+            - name: Run Lint
+              run: npm run lint
+
+            # 6. Gera o Prisma Client (necessário para o Build e Testes)
+            - name: Prisma Generate
+              run: npx prisma generate
+
+            # 7. Tenta fazer o Build (Verifica erros de TypeScript)
+            - name: Build project
+              run: npx tsc
+
+            # 8. Corre os Testes (Vitest)
+            - name: Run Tests
+              run: npm run test -- --run # O --run faz o Vitest fechar após terminar
